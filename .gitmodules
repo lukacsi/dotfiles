@@ -1,0 +1,18 @@
+[submodule ".oh-my-zsh"]
+	path = .oh-my-zsh
+	url = https://github.com/ohmyzsh/ohmyzsh.git
+[submodule ".zsh_custom/plugins/zsh-autosuggestions"]
+	path = .zsh_custom/plugins/zsh-autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions
+[submodule ".zsh_custom/plugins/zsh-completions"]
+	path = .zsh_custom/plugins/zsh-completions
+	url = https://github.com/zsh-users/zsh-completions.git
+[submodule ".zsh_custom/plugins/zsh-eza"]
+	path = .zsh_custom/plugins/zsh-eza
+	url = https://github.com/z-shell/zsh-eza.git
+[submodule ".zsh_custom/plugins/zsh-fzf-history-search"]
+	path = .zsh_custom/plugins/zsh-fzf-history-search
+	url = https://github.com/joshskidmore/zsh-fzf-history-search
+[submodule ".zsh_custom/plugins/zsh-syntax-highlighting"]
+	path = .zsh_custom/plugins/zsh-syntax-highlighting
+	url = https://github.com/zsh-users/zsh-syntax-highlighting

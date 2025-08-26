@@ -1,0 +1,156 @@
+# Use the official schema for completions in supporting editors
+"$schema" = "https://starship.rs/config-schema.json"
+
+# Fast, readable prompt: two lines, with a clear error indicator
+add_newline = true
+command_timeout = 1000  # ms; prevents slow external calls from hanging the prompt
+
+# Top line shows: path · git · k8s · cloud · IaC · container · duration · exit status
+# Bottom line: prompt symbol only (green ➜ on success, red ✗ on error)
+format = """
+$directory$git_branch$git_status$git_commit$kubernetes$gcloud$terraform$docker_context$container$cmd_duration$status
+$character
+"""
+
+# ───────────────────────────
+# Prompt symbol & basic shell feel
+# ───────────────────────────
+[character]
+success_symbol = "➜ "
+error_symbol   = "✗ "
+
+# ───────────────────────────
+# Filesystem / path
+# ───────────────────────────
+[directory]
+truncation_length = 4
+truncate_to_repo  = true
+style = "cyan"
+read_only = " 🔒"
+
+# ───────────────────────────
+# Git signal (succinct but informative)
+# ───────────────────────────
+[git_branch]
+symbol = " "            # Requires a Nerd Font
+format = "on $symbol$branch "
+style = "bold purple"
+
+[git_status]
+format = '($all_status$ahead_behind )'
+style = "yellow"
+stashed = "≡"
+staged  = "+$count"
+modified= "~$count"
+deleted = "-$count"
+untracked = "?$count"
+ahead = "⇡$count"
+behind = "⇣$count"
+diverged = "⇕⇡$ahead_count⇣$behind_count"
+
+[git_commit]
+commit_hash_length = 7
+only_detached = false
+tag_disabled = false
+
+# ───────────────────────────
+# Kubernetes: context + namespace with safety colors
+# Uses Starship's kubernetes module + context-specific styles.
+# ───────────────────────────
+[kubernetes]
+disabled = true
+symbol = "⎈ "
+# Escape parentheses inside literal output
+format = 'on $symbol$context( \($namespace\)) '
+
+# Color-code by environment; adjust patterns to match your contexts.
+# Starship supports regex patterns and context aliases.
+# Examples follow the current "contexts" table approach.
+# See: docs & examples in Starship/GitHub issues.
+#   - Context pattern → style (and optional alias via capture groups)
+#   - Named capture groups can be referenced in aliases (e.g., $cluster)
+#     (example usage in upstream issue thread)
+# [[kubernetes.contexts]] entries processed top-to-bottom.
+
+# Production → bold red
+[[kubernetes.contexts]]
+context_pattern = '.*(prod|production|live).*'
+style = 'bold red'
+
+# Preprod / UAT / Staging → bold yellow
+[[kubernetes.contexts]]
+context_pattern = '.*(preprod|uat|staging).*'
+style = 'bold yellow'
+
+# Dev / Sandbox → bold green
+[[kubernetes.contexts]]
+context_pattern = '.*(dev|sandbox).*'
+style = 'bold green'
+
+# GKE contexts → shorten to "gke-<cluster>" (example of named capture)
+[[kubernetes.contexts]]
+context_pattern = 'gke_.*_(?P<cluster>[\\w-]+)'
+context_alias   = 'gke-$cluster'
+style = 'bold cyan'
+
+# EKS contexts → shorten to "eks-<cluster>"
+[[kubernetes.contexts]]
+context_pattern = 'arn:aws:eks:.*:cluster/(?P<cluster>[\\w-]+)'
+context_alias   = 'eks-$cluster'
+style = 'bold blue'
+
+# ───────────────────────────
+# Cloud: GCP (can add AWS/Azure later if you use them)
+# ───────────────────────────
+[gcloud]
+disabled = true
+symbol = "☁️ "
+style = "bold blue"
+# Let the module's default format show active account/project; tweak later if needed. [1](https://starship.rs/config/)
+
+# ───────────────────────────
+# IaC: Terraform workspace signal
+# ───────────────────────────
+[terraform]
+symbol = "TF "
+style = "bold magenta"
+format = 'via $symbol$workspace '
+
+# ───────────────────────────
+# Containers
+# ───────────────────────────
+[docker_context]
+symbol = "🐳 "
+style = "bold blue"
+format = 'via $symbol$context '
+
+[container]
+format = 'in 📦 $name '
+style = 'dimmed cyan'
+
+# ───────────────────────────
+# Operational quality-of-life
+# ───────────────────────────
+[cmd_duration]
+min_time = 1000
+format = '⏱ $duration '
+style = "dimmed yellow"
+
+[status]
+disabled = false
+format = '($status) '
+map_symbol = true
+recognize_signal_code = true
+
+# Only show host/user on SSH to keep local prompt clean
+[hostname]
+ssh_only = true
+format = '@$hostname '
+style = 'bold dimmed green'
+
+[username]
+show_always = false
+format = '$user '
+style_user = 'white bold'
+style_root = 'bold red'
+
